@@ -1,3 +1,9 @@
+databuild/debug
+databuild/target
+databuild/symrs.txt
+
+data/*
+
 inference/debug
 inference/target
 

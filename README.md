@@ -6,10 +6,23 @@ development and not functional yet.
 
 # Setup
 
-You will need to have the current version of [Rust](https://www.rust-lang.org/) and
-[Node](https://nodejs.org/) as well as [NPM](https://www.npmjs.com/) installed. To generate the WASM
-binary as well as the glue code, install `wasm-bingen-cli` using `cargo install`, make sure its
-version matches the one in `inference/Cargo.toml` and run
+In order to build this project, you will need to have [Rust](https://www.rust-lang.org/),
+[Typst](https://typst.app/), [ImageMagick](https://imagemagick.org/) and [Node](https://nodejs.org/)
+as well as [NPM](https://www.npmjs.com/) installed.
+
+The generation of the training images is done with following commands. This will download the
+relevant Rust file from the Typst project, extract the symbol names from it, generate a JSON file
+and the training images within the folder `data` and save the icons for the frontend in
+`frontend/static/symbols`.
+
+```bash
+cd databuild
+wget -O symrs.txt https://raw.githubusercontent.com/typst/typst/main/crates/typst/src/symbols/sym.rs
+cargo run symrs.txt ../data ../frontend/static/symbols
+```
+
+To generate the WASM binary as well as the glue code, install `wasm-bingen-cli` using `cargo
+install`, make sure its version matches the one in `inference/Cargo.toml` and run
 
 ```bash
 cd inference
@@ -25,8 +38,8 @@ npm install
 npm run dev
 ```
 
-Later versions will contain a step to generate the training data and execute the training loop (as
-well as implement a working inference algorithm and frontend).
+Later versions will contain a step to execute the training loop (and implement a working inference
+algorithm and frontend).
 
 ## License
 
