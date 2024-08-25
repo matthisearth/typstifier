@@ -4,6 +4,11 @@ databuild/symrs.txt
 
 data/*
 
+training/venv
+training/.ipynb_checkpoints
+training/__pycache__
+training/numpydata.pkl
+
 inference/debug
 inference/target
 

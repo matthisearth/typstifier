@@ -31,7 +31,7 @@ fn main() {
         .collect();
 
     let mut rng = rand::thread_rng();
-    let repetitions = 16;
+    let repetitions = 50;
     let total_size = 64;
 
     println!(
@@ -79,7 +79,7 @@ fn main() {
         .into_iter()
         .filter_map(|(d, b)| if b { Some(d) } else { None })
         .collect();
-    output_json(&data, &Path::new(data_dir).join("names.json"));
+    output_json(&data, &Path::new(symbol_dir).join("names.json"));
 
     println!(
         "Done: {} symbols (without whitespaces), {} repetitions, {} total",
