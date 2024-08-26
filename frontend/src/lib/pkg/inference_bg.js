@@ -31,32 +31,32 @@ function getDataViewMemory0() {
     return cachedDataViewMemory0;
 }
 
-let cachedInt32ArrayMemory0 = null;
+let cachedUint32ArrayMemory0 = null;
 
-function getInt32ArrayMemory0() {
-    if (cachedInt32ArrayMemory0 === null || cachedInt32ArrayMemory0.byteLength === 0) {
-        cachedInt32ArrayMemory0 = new Int32Array(wasm.memory.buffer);
+function getUint32ArrayMemory0() {
+    if (cachedUint32ArrayMemory0 === null || cachedUint32ArrayMemory0.byteLength === 0) {
+        cachedUint32ArrayMemory0 = new Uint32Array(wasm.memory.buffer);
     }
-    return cachedInt32ArrayMemory0;
+    return cachedUint32ArrayMemory0;
 }
 
-function getArrayI32FromWasm0(ptr, len) {
+function getArrayU32FromWasm0(ptr, len) {
     ptr = ptr >>> 0;
-    return getInt32ArrayMemory0().subarray(ptr / 4, ptr / 4 + len);
+    return getUint32ArrayMemory0().subarray(ptr / 4, ptr / 4 + len);
 }
 /**
-* @param {Float32Array} _drawing
-* @returns {Int32Array}
+* @param {Float32Array} drawing
+* @returns {Uint32Array}
 */
-export function infer_symbol(_drawing) {
+export function infer_symbol(drawing) {
     try {
         const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-        const ptr0 = passArrayF32ToWasm0(_drawing, wasm.__wbindgen_export_0);
+        const ptr0 = passArrayF32ToWasm0(drawing, wasm.__wbindgen_export_0);
         const len0 = WASM_VECTOR_LEN;
         wasm.infer_symbol(retptr, ptr0, len0);
         var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
         var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
-        var v2 = getArrayI32FromWasm0(r0, r1).slice();
+        var v2 = getArrayU32FromWasm0(r0, r1).slice();
         wasm.__wbindgen_export_1(r0, r1 * 4, 4);
         return v2;
     } finally {

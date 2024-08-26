@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
-* @param {Float32Array} _drawing
-* @returns {Int32Array}
+* @param {Float32Array} drawing
+* @returns {Uint32Array}
 */
-export function infer_symbol(_drawing: Float32Array): Int32Array;
+export function infer_symbol(drawing: Float32Array): Uint32Array;
