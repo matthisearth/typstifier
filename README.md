@@ -31,14 +31,9 @@ model checkpoint into a binary file.
 
 To generate the WASM binary as well as the glue code, you will need to install `wasm-bingen-cli`
 using `cargo install`, make sure its version matches the one in `inference/Cargo.toml` and run
-`make inference`. Finally, to install the NPM packages and start the development server, execute the
-commands below.
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
+`make inference`. Finally, in the `frontend` directory, you can install the Node packages using 
+`npm install`, start the development server using `npm run dev` and build the project as a static
+site using `npm run build`.
 
 ## License
 

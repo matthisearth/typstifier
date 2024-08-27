@@ -6,7 +6,7 @@
 databuild:
 	cd databuild && \
 	wget -O symrs.txt https://raw.githubusercontent.com/typst/typst/main/crates/typst/src/symbols/sym.rs && \
-	cargo run symrs.txt ../data ../frontend/static/symbols && \
+	cargo run symrs.txt ../data ../frontend/static/symbols ../frontend/src/lib/names.json && \
 	cd ..
 
 inference:

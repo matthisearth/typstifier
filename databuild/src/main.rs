@@ -15,14 +15,15 @@ use std::process::Command;
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
-    if args.len() != 4 {
-        println!("usage: databuild [filename] [datadir] [symboldir]");
+    if args.len() != 5 {
+        println!("usage: databuild [filename] [datadir] [symboldir] [jsonfile]");
         return;
     }
 
     let filename = Path::new(&args[1]);
     let data_dir = Path::new(&args[2]);
     let symbol_dir = Path::new(&args[3]);
+    let json_file = Path::new(&args[4]);
 
     let input = std::fs::read_to_string(filename).expect("Unable to read file.");
     let mut data: Vec<_> = generate_data(&input)
@@ -79,7 +80,7 @@ fn main() {
         .into_iter()
         .filter_map(|(d, b)| if b { Some(d) } else { None })
         .collect();
-    output_json(&data, &Path::new(symbol_dir).join("names.json"));
+    output_json(&data, &json_file.to_path_buf());
 
     println!(
         "Done: {} symbols (without whitespaces), {} repetitions, {} total",
