@@ -17,7 +17,7 @@ and the training images within the folder `data` and save the icons for the fron
 
 To train the neural network in the `training` directory, you will need to have
 [JAX](https://github.com/google/jax) with proper GPU support installed. Moreover, this project uses
-[NumPy](https://numpy.org/), [Matplotlib](https://numpy.org/), [OpenCV](https://opencv.org/),
+[NumPy](https://numpy.org/), [Matplotlib](https://matplotlib.org/), [OpenCV](https://opencv.org/),
 [Optax](https://github.com/google-deepmind/optax) and [Flax](https://github.com/google/flax) which
 you can install via PIP.
 
@@ -26,8 +26,8 @@ pip install numpy matplotlib opencv-python optax flax
 ```
 
 The file `training/dataload.py` writes the training data to the file `training/numpydata.pkl`, the
-notebook `training/main.ipynb` contains the training loop and `training/datawrite.py` writes the
-model checkpoint into a binary file.
+file `training/train.py` contains the training loop and `training/datawrite.py` writes the
+model checkpoint into a binary file. All these scripts can be run in order using `make training`.
 
 To generate the WASM binary as well as the glue code, you will need to install `wasm-bingen-cli`
 using `cargo install`, make sure its version matches the one in `inference/Cargo.toml` and run

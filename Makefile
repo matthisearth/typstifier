@@ -1,12 +1,19 @@
 # typstifier
 # Makefile
 
-.PHONY: databuild inference
+.PHONY: databuild training inference
 
 databuild:
 	cd databuild && \
-	wget -O symrs.txt https://raw.githubusercontent.com/typst/typst/main/crates/typst/src/symbols/sym.rs && \
-	cargo run symrs.txt ../data ../frontend/static/symbols ../frontend/src/lib/names.json && \
+	wget -O symrs.txt https://raw.githubusercontent.com/typst/typst/0.11/crates/typst/src/symbols/sym.rs && \
+	cargo run symrs.txt ../data ../frontend/static/symbols.png ../frontend/src/lib/names.json && \
+	cd ..
+
+training:
+	cd training && \
+	python3 dataload.py && \
+	python3 train.py && \
+	python3 datawrite.py && \
 	cd ..
 
 inference:

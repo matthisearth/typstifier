@@ -14,7 +14,7 @@ class ConvNet(nnx.Module):
         self.max_pool2 = partial(nnx.max_pool, window_shape = (2, 2), strides = (2, 2))
 
         self.lin1 = nnx.Linear(8 * 8 * 64, 64, rngs = rngs)
-        self.lin2 = nnx.Linear(64, 825, rngs = rngs)
+        self.lin2 = nnx.Linear(64, 839, rngs = rngs)
 
         self.dropout1 = nnx.Dropout(0.2, rngs = rngs)
         self.dropout2 = nnx.Dropout(0.2, rngs = rngs)

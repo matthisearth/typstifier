@@ -16,13 +16,13 @@ use std::process::Command;
 fn main() {
     let args: Vec<String> = std::env::args().collect();
     if args.len() != 5 {
-        println!("usage: databuild [filename] [datadir] [symboldir] [jsonfile]");
+        println!("usage: databuild [filename] [datadir] [symbolpath] [jsonfile]");
         return;
     }
 
     let filename = Path::new(&args[1]);
     let data_dir = Path::new(&args[2]);
-    let symbol_dir = Path::new(&args[3]);
+    let symbol_path = Path::new(&args[3]);
     let json_file = Path::new(&args[4]);
 
     let input = std::fs::read_to_string(filename).expect("Unable to read file.");
@@ -43,24 +43,24 @@ fn main() {
     );
 
     let mut index: usize = 0;
+    let mut original_paths = vec![];
+
     'mainloop: for (d, b) in &mut data {
-        let png_in = Path::new(symbol_dir).join(&format!("{index}.png"));
+        let png_in = Path::new(data_dir).join(&format!("original-{index}.png"));
         gen_typst_image(d, &png_in);
 
         for i in 0..repetitions {
-            let png_out = Path::new(data_dir).join(&format!("{index}-{i}.png"));
+            let png_out = Path::new(data_dir).join(&format!("derived-{index}-{i}.png"));
             let size = rng.gen_range(32..=64);
 
-            let success = blur_and_place(
+            let success = augment_img(
                 &png_in,
                 &png_out,
                 total_size,
                 size,
                 rng.gen_range((-(total_size / 2) + size / 2)..=(total_size / 2 - size / 2)),
                 rng.gen_range((-(total_size / 2) + size / 2)..=(total_size / 2 - size / 2)),
-                rng.gen_range(-30..=30),
-                rng.gen_range(0..=3),
-                rng.gen_range(0..=3),
+                rng.gen_range(-20..=20),
             );
 
             // If image is all white (whitespace characters) go to next one and don't increment index
@@ -72,7 +72,8 @@ fn main() {
                 continue 'mainloop;
             }
         }
-        blur_and_place(&png_in, &png_in, 128, 128, 0, 0, 0, 0, 0);
+        augment_img(&png_in, &png_in, 128, 128, 0, 0, 0);
+        original_paths.push(png_in.to_path_buf());
         index += 1;
     }
 
@@ -81,6 +82,7 @@ fn main() {
         .filter_map(|(d, b)| if b { Some(d) } else { None })
         .collect();
     output_json(&data, &json_file.to_path_buf());
+    generate_sprite(&original_paths, &symbol_path.to_path_buf());
 
     println!(
         "Done: {} symbols (without whitespaces), {} repetitions, {} total",
@@ -114,7 +116,7 @@ fn gen_typst_image(unicode: &TypstUnicode, png_filename: &PathBuf) {
     std::fs::remove_file(&typst_filename).expect("Could not delete typst file.")
 }
 
-fn blur_and_place(
+fn augment_img(
     png_in: &PathBuf,
     png_out: &PathBuf,
     total_size: i32,
@@ -122,8 +124,6 @@ fn blur_and_place(
     x: i32,
     y: i32,
     angle: i32,
-    thickening: i32,
-    blur: i32,
 ) -> bool {
     // total_size, size, x, y such that x.abs() + size / 2, y.abs() + size / 2 <= total_size / 2
     let displacement = match (x.is_negative(), y.is_negative()) {
@@ -146,15 +146,27 @@ fn blur_and_place(
         .arg(format!("{size}x{size}"))
         .arg("-extent") // Put image on bigger image with some relative displacement from center
         .arg(format!("{total_size}x{total_size}{displacement}"))
-        .arg("-morphology") // Make lines thicker (0.5 but not 0 implements the identity)
-        .arg("Erode")
-        .arg(format!("Disk:{thickening}.5"))
-        .arg("-blur") // Apply Gaussian blur
-        .arg(format!("0x{blur}"))
+        .arg("-negate") // Threshold to create black-white picture
+        .arg("-threshold")
+        .arg("25%")
+        .arg("-negate")
         .arg(png_out) // Output image
         .output()
         .expect("Failed to execute convert.");
     output.stderr.is_empty()
+}
+
+fn generate_sprite(pngs_in: &[PathBuf], sprite_out: &PathBuf) {
+    let status = Command::new("montage")
+        .args(pngs_in)
+        .arg("-tile")
+        .arg("20x")
+        .arg("-geometry")
+        .arg("+0+0")
+        .arg(sprite_out)
+        .status()
+        .expect("Failed to execute montage.");
+    assert!(status.success());
 }
 
 // Generate JSON database

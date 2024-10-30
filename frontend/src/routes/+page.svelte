@@ -12,6 +12,9 @@
   const drawSize = 64;
   const maxNumShow = 10;
 
+  const imgShowSize = 128;
+  const spriteWidth = 20;
+
   let pixelArray = new Float32Array(drawSize * drawSize).fill(0.0);
   let rankedSymbols: Uint32Array = new Uint32Array(0);
 
@@ -102,6 +105,12 @@
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   });
+
+  function getSpritePosition(symbol: number): string {
+    let index_x = symbol % spriteWidth;
+    let index_y = (symbol - index_x) / spriteWidth;
+    return `${- index_x * imgShowSize}px ${- index_y * imgShowSize}px`;
+  }
 </script>
 
 <div class="flex-grow w-full max-w-screen-lg mx-auto object-contain px-5 pt-2 pb-5 bg-gray-200">
@@ -135,11 +144,10 @@
   <div class="flex flex-row flex-wrap">
     {#each rankedSymbols.slice(0, maxNumShow) as symbol}
       <div class="bg-white p-6 rounded-lg m-4 flex flex-col items-center">
-        <img
+        <div
           class="mb-6"
-          src="symbols/{symbol}.png"
-          alt={names[symbol].sym_name}
-        />
+          style="height: {imgShowSize}px; width: {imgShowSize}px; background-image: url('symbols.png'); background-repeat: no-repeat; background-position: {getSpritePosition(symbol)};"
+        ></div>
         <span class="font-mono text-center">{names[symbol].sym_name}</span>
       </div>
     {/each}

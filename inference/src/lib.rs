@@ -26,7 +26,7 @@ const LIN1_IN: usize = 8 * 8 * 64;
 const LIN1_OUT: usize = 64;
 
 const LIN2_IN: usize = 64;
-const LIN2_OUT: usize = 825;
+const LIN2_OUT: usize = 839;
 
 // Binding for logging
 

@@ -9,15 +9,20 @@ import pickle
 img_size = 64
 
 def get_index(filename):
-    """Takes filename of the form index-i.png and returns index"""
-    return int(filename.split("-")[0])
+    """Takes filename of the form derived-index-i.png and returns index"""
+    return int(filename.split("-")[1])
+
+def is_derived(filename):
+    """Returns true if filename is of the form derived-* and false otherwise"""
+    split = filename.split("-")
+    return len(split) > 1 and split[0] == "derived"
 
 def get_image(image_path):
     """Get image and write to numpy tensor of shape (img_size, img_size, 1)"""
     # Initially we get 0 for black and 255 for white, so we flip this. 
     return np.expand_dims((255 - cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)) / 256.0, -1)
 
-filenames = list(os.listdir("../data"))
+filenames = list(filter(is_derived, os.listdir("../data")))
 indices = map(get_index, filenames)
 
 total_img_num = len(filenames)
